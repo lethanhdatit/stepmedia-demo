@@ -15,7 +15,6 @@ builder.Services.AddDbContext<StepmediaDemoContext>
                 (options => options.UseSqlServer(builder.Configuration.GetConnectionString("MainConnection")));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
