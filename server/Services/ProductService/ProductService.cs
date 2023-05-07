@@ -12,5 +12,18 @@ namespace stepmedia_demo.Services
         }
 
         protected override IGenericRepository<Product> _reponsitory => _unitOfWork.ProductRepository;
+
+        public async Task<Product> CreateNewAsync(ProductCreation input)
+        {
+            var newEntity = new Product()
+            {
+                ShopId = input.ShopId,
+                Name = input.Name,
+                UnitPrice = input.UnitPrice,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            return await CreateAsync(newEntity);
+        }
     }
 }
