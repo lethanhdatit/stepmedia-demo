@@ -54,18 +54,5 @@ namespace stepmedia_demo.Services
         {
             return _reponsitory.FindById(id);
         }
-        public async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null)
-        {
-            var query = _reponsitory.Find(filter);
-
-            if (orderBy != null)
-            {
-                query = orderBy(query);
-            }
-
-            const int PageSize = 10;
-            return query;
-        }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace stepmedia_demo.EntityModels;
+﻿using stepmedia_demo.Models;
+using System.ComponentModel.DataAnnotations;
+
+namespace stepmedia_demo.EntityModels;
 
 public class CustomerDto
 {
@@ -11,4 +14,22 @@ public class CustomerDto
     public DateTime? DoB { get; set; }
 
     public DateTime CreatedDate { get; set; }
+}
+
+public class CustomerCreation
+{
+    [Required]
+    [StringLength(50)]
+    public string FullName { get; set; }
+
+    [Required]
+    [StringLength(50)]
+    public string Email { get; set; }
+
+    [Required]
+    public DateTime DoB { get; set; }
+}
+
+public class CustomerResponse : BaseResponse
+{
 }

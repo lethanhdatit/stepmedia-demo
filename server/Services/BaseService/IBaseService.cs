@@ -13,7 +13,5 @@ namespace stepmedia_demo.Services
 
         Task<TEntity> FindByIdAsync(object keyValues);
         TEntity FindById(object keyValues);
-        Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> filter = null,
-             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null);
     }
 }

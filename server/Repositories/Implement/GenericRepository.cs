@@ -1,9 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using stepmedia_demo.EntityModels;
+using stepmedia_demo.Extensions;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Web.Helpers;
 
 namespace stepmedia_demo.Repositories
 {
+    public class PaginationBase
+    {
+        public long TotalCount { get; set; }
+        public long FilteredCount { get; set; }
+    }
+
+    public class PaginationQuery<TEntity> : PaginationBase
+    {
+        public IQueryable<TEntity> PagedData { get; set; }
+    }
+
+    public class PaginationResult<TEntity> : PaginationBase
+    {
+        public List<TEntity> PagedData { get; set; }
+    }
+
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         internal StepmediaDemoContext _context;
@@ -15,23 +36,104 @@ namespace stepmedia_demo.Repositories
             _dbSet = context.Set<TEntity>();
         }
 
-        public virtual IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> filter = null,
-            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
+        public virtual PaginationQuery<TEntity> Find(Expression<Func<TEntity, bool>> filter = null!,
+                                                Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null!, 
+                                                string includeProperties = "", 
+                                                int? page = null,
+                                                int? pageSize = null)
         {
             IQueryable<TEntity> query = _dbSet;
+
+            long totalCount = query.LongCount();
+            long filteredCount = totalCount;
 
             if (filter != null)
             {
                 query = query.Where(filter);
+                filteredCount = query.LongCount();
             }
 
-            foreach (var includeProperty in includeProperties.Split
-                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+            if (includeProperties != null)
+                foreach (var includeProperty in includeProperties.Split
+                    (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+
+            if (orderBy != null)
             {
-                query = query.Include(includeProperty);
+                query = orderBy(query);
             }
 
-            return orderBy != null ? orderBy(query) : query;
+            if (page != null && pageSize != null)
+            {
+                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            }
+
+            return new PaginationQuery<TEntity>
+            {
+                TotalCount = totalCount,
+                FilteredCount = filteredCount,
+                PagedData = query,
+            };
+        }
+
+        public virtual PaginationQuery<TEntity> Find(Expression<Func<TEntity, bool>> filter = null!,
+                                                string orderBy = null!,
+                                                SortDirection? orderDirection = SortDirection.Ascending,
+                                                string includeProperties = "",
+                                                int? page = null,
+                                                int? pageSize = null)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            long totalCount = query.LongCount();
+            long filteredCount = totalCount;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+                filteredCount = query.LongCount();
+            }
+
+            if (includeProperties != null)
+                foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+
+            if (!string.IsNullOrWhiteSpace(orderBy))
+            {
+                var propertyInfo = typeof(TEntity).GetProperty(orderBy, BindingFlags.IgnoreCase 
+                                                                      | BindingFlags.Public 
+                                                                      | BindingFlags.Instance);
+                if(propertyInfo != null)
+                {
+                    orderDirection = orderDirection ?? SortDirection.Ascending;
+                    switch (orderDirection)
+                    {
+                        case SortDirection.Ascending:
+                            query = query.OrderBy(propertyInfo.Name);
+                            break;
+                        case SortDirection.Descending:
+                            query = query.OrderByDescending(propertyInfo.Name);
+                            break;
+                    }
+                }
+            }
+
+            if (page != null && pageSize != null)
+            {
+                query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
+            }
+
+            return new PaginationQuery<TEntity>
+            {
+                TotalCount = totalCount,
+                FilteredCount = filteredCount,
+                PagedData = query,
+            };
         }
 
         public virtual async Task<TEntity> FindByIdAsync(object id)
