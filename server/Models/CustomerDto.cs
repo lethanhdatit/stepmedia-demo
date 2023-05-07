@@ -11,7 +11,7 @@ public class CustomerDto
 
     public string? Email { get; set; }
 
-    public DateTime? DoB { get; set; }
+    public DateTime? Dob { get; set; }
 
     public DateTime CreatedDate { get; set; }
 }
@@ -27,7 +27,7 @@ public class CustomerCreation
     public string Email { get; set; }
 
     [Required]
-    public DateTime DoB { get; set; }
+    public DateTime Dob { get; set; }
 }
 
 public class CustomerResponse : BaseResponse

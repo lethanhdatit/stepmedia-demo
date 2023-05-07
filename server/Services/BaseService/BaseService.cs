@@ -1,10 +1,13 @@
-﻿using stepmedia_demo.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using stepmedia_demo.EntityModels;
+using stepmedia_demo.Repositories;
 using stepmedia_demo.UnitOfWork;
 using System.Linq.Expressions;
+using System.Web.Helpers;
 
 namespace stepmedia_demo.Services
 {
-    public abstract class BaseService<TEntity> : IBaseService<TEntity>
+    public abstract class BaseService<TEntity, DtoEntity> : IBaseService<TEntity, DtoEntity>
         where TEntity : class
     {
         protected readonly IUnitOfWork _unitOfWork;
@@ -50,9 +53,29 @@ namespace stepmedia_demo.Services
         {
             return await _reponsitory.FindByIdAsync(id);
         }
+
         public virtual TEntity FindById(object id)
         {
             return _reponsitory.FindById(id);
+        }
+
+        public async Task<PaginationResult<DtoEntity>> GetListAsync(string? orderBy,
+                                            SortDirection? orderDirection,
+                                            int? page,
+                                            int? pageSize,
+                                            Expression<Func<TEntity, DtoEntity>> mapping)
+        {
+            if(mapping == null)
+                throw new ArgumentNullException(nameof(mapping));
+
+            var entities = _reponsitory.Find(null!, orderBy!, orderDirection, string.Empty, page, pageSize);
+
+            return new PaginationResult<DtoEntity>()
+            {
+                TotalCount = entities.TotalCount,
+                FilteredCount = entities.FilteredCount,
+                PagedData = await entities.PagedData.Select(mapping).ToListAsync(),
+            };
         }
     }
 }

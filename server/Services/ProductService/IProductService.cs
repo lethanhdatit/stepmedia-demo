@@ -2,7 +2,7 @@
 
 namespace stepmedia_demo.Services
 {
-    public interface IProductService : IBaseService<Product>
+    public interface IProductService : IBaseService<Product, ProductDto>
     {
     }
 }

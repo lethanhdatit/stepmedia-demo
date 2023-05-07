@@ -25,7 +25,14 @@ namespace stepmedia_demo.Controllers
                                                      int? page,
                                                      int? pageSize)
         {
-            return await _customerService.GetListAsync(orderBy, orderDirection, page, pageSize);
+            return await _customerService.GetListAsync(orderBy, orderDirection, page, pageSize, s => new CustomerDto
+            {
+                Id = s.Id,
+                FullName = s.FullName,
+                Email = s.Email,
+                Dob = s.DoB,
+                CreatedDate = s.CreatedDate,
+            });
         }
 
         [HttpPost]

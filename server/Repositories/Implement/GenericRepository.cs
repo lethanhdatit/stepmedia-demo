@@ -125,6 +125,9 @@ namespace stepmedia_demo.Repositories
 
             if (page != null && pageSize != null)
             {
+                if(page.Value <= 0)
+                    throw new ArgumentException("'page' must be greater than 0");
+
                 query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
             }
 

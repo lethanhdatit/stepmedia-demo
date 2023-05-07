@@ -5,7 +5,7 @@ using stepmedia_demo.UnitOfWork;
 
 namespace stepmedia_demo.Services
 {
-    public class ProductService : BaseService<Product>, IProductService
+    public class ProductService : BaseService<Product, ProductDto>, IProductService
     {
         public ProductService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
