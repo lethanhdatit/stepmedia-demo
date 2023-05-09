@@ -1,54 +1,28 @@
 <template>
   <div style="height: 720px;">
-    <h1>ORDER LIST</h1>
+    <h1>CUSTOMER LIST</h1>
     <div v-if="data && data.length > 0">
       <el-table :data="data" v-loading="loading" stripe @sort-change="sortChange" :default-sort="{
-        prop: 'id',
-        order: 'descending' }">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <div v-if="props.row.items && props.row.items.length > 0" style="margin-left: 50px;">
-              <el-table size="mini" :data="props.row.items">
-                <el-table-column label="Product">
-                  <template slot-scope="scope">
-                    <span style="margin-left: 10px;font-style: italic;">{{ scope.row.productName }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="Quantity">
-                  <template slot-scope="scope">
-                    <el-tag size="small">{{ scope.row.quantity
-                    }} items</el-tag>
-                  </template>
-                </el-table-column>
-                <el-table-column label="Unit price">
-                  <template slot-scope="scope">
-                    <el-tag size="small">{{ scope.row.unitPrice
-                    }} đ</el-tag>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
-            <el-empty v-else description="Empty product"></el-empty>
-          </template>
-        </el-table-column>
+        prop: 'email',
+        order: 'ascending' }">
         <el-table-column prop="id" label="ID" width="60" sortable>
         </el-table-column>
-        <el-table-column prop="customerName" label="Customer">
+        <el-table-column prop="fullName" label="Full Name">
           <template slot-scope="scope">
-            <el-tag type="default" size="small">{{ scope.row.customerName
+            <el-tag type="default" size="small">{{ scope.row.fullName
             }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="shopName" label="Shop">
+        <el-table-column prop="email" label="Email" sortable>
           <template slot-scope="scope">
-            <el-tag type="warning" size="small">{{ scope.row.shopName
+            <el-tag type="warning" size="small">{{ scope.row.email
             }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="total" label="Total">
+        <el-table-column prop="dob" label="Birthday">
           <template slot-scope="scope">
-            <el-tag type="success" size="small">{{ scope.row.total
-            }} đ</el-tag>
+            <el-tag type="success" size="small">{{ scope.row.dob
+            }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -70,8 +44,8 @@ export default {
       pageNumber: 1,
       pageSize: 10,
       loading: false,
-      sortBy: 'id',
-      sortOrder: 'descending'
+      sortBy: 'email',
+      sortOrder: 'ascending'
     }
   },
   created() {
@@ -80,11 +54,11 @@ export default {
   methods: {
     async fetch(newPage, newSize, sortColumn, sortOrder) {
       this.loading = true;
-      var path = `/orders?page=${newPage}&pageSize=${newSize}`;
+      var path = `/customers?page=${newPage}&pageSize=${newSize}`;
 
-      if(sortColumn)
+      if (sortColumn)
         path = `${path}&orderBy=${sortColumn}`
-      if(sortOrder)
+      if (sortOrder)
         path = `${path}&orderDirection=${sortOrder}`
 
       var res = await this.$axios.get(path);
@@ -96,6 +70,12 @@ export default {
         this.loading = false;
         this.sortBy = sortColumn;
         this.sortOrder = sortOrder;
+        if (res.data.filteredCount < 30) {
+          this.$alert('Not enough data, 30 customers as minimum', 'Warning', {
+            confirmButtonText: 'OK',
+            type: 'warning',
+          });
+        }
       }
     },
     changePage(newPage) {
@@ -104,7 +84,7 @@ export default {
     sizeChange(newSize) {
       this.fetch(this.pageNumber, newSize, this.sortBy, this.sortOrder)
     },
-    sortChange({ prop, order }){
+    sortChange({ prop, order }) {
       this.fetch(this.pageNumber, this.pageSize, prop, order);
     }
   }

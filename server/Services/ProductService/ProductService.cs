@@ -34,12 +34,18 @@ namespace stepmedia_demo.Services
                                            SortDirection? orderDirection,
                                            int? page,
                                            int? pageSize,
-                                           Expression<Func<Product, ProductDto>> mapping)
+                                           Expression<Func<Product, ProductDto>> mapping,
+                                           string? search = null)
         {
             if (mapping == null)
                 throw new ArgumentNullException(nameof(mapping));
 
-            var entities = _reponsitory.Find(shopId.HasValue ? s => s.ShopId == shopId.Value : null!, orderBy!, orderDirection, string.Empty, page, pageSize);
+            var needSearch = !string.IsNullOrWhiteSpace(search);
+
+            Expression<Func<Product, bool>> filter = s => (shopId != null ? s.ShopId == shopId.Value : true)
+                                                       && (needSearch ? s.Name.Contains(search) : true);
+            
+            var entities = _reponsitory.Find(filter, orderBy!, orderDirection, string.Empty, page, pageSize);
 
             return new PaginationResult<ProductDto>()
             {

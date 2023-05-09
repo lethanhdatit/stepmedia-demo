@@ -24,16 +24,18 @@ namespace stepmedia_demo.Controllers
                                                                  string? orderBy,
                                                                  SortDirection? orderDirection,
                                                                  int? page,
-                                                                 int? pageSize)
+                                                                 int? pageSize,
+                                                                 string? search = null)
         {
             return await _productService.GetListAsync(shopId, orderBy, orderDirection, page, pageSize, s => new ProductDto
             {
                 Id = s.Id,
                 ShopId = s.ShopId,
                 Name = s.Name,
+                ShopName = s.Shop.Name,
                 UnitPrice = s.UnitPrice,
                 CreatedDate = s.CreatedDate,
-            });
+            }, search);
         }
 
         [HttpPost]

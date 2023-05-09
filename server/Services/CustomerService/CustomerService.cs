@@ -21,7 +21,7 @@ namespace stepmedia_demo.Services
             {
                 FullName = input.FullName,
                 Email = input.Email,
-                DoB = input.Dob,
+                DoB = DateTime.Parse(input.Dob).Date,
                 CreatedDate = DateTime.UtcNow
             };
 

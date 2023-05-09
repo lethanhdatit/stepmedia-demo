@@ -11,6 +11,8 @@ public class ProductDto
 
     public string Name { get; set; } = null!;
 
+    public string ShopName { get; set; } = null!;
+
     public double UnitPrice { get; set; }
 
     public DateTime CreatedDate { get; set; }

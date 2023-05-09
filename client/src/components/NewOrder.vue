@@ -5,7 +5,7 @@
       <el-form :model="newOrderForm" status-icon :rules="rules" ref="newOrderForm" class="demo-newOrderForm"
         style="margin-left: 20px;">
         <el-form-item label="Customer:" prop="customerId" required>
-          <el-select style="width: 100%;" v-loading="customerSearchLoading" v-model="newOrderForm.customerId" filterable
+          <el-select autocomplete="off" style="width: 100%;" v-loading="customerSearchLoading" v-model="newOrderForm.customerId" filterable
             remote reserve-keyword placeholder="Please enter a keyword" :remote-method="customerRemoteMethod"
             :loading="customerSearchLoading">
             <el-option v-for="item in customerOptions" :key="item.id" :label="item.fullName + ' - ' + item.email"
@@ -15,7 +15,7 @@
         </el-form-item>
 
         <el-form-item label="Shop:" prop="shopId" required>
-          <el-select @change="onShopChange" style="width: 100%;" v-loading="shopSearchLoading" v-model="newOrderForm.shopId" filterable remote
+          <el-select autocomplete="off" @change="onShopChange" style="width: 100%;" v-loading="shopSearchLoading" v-model="newOrderForm.shopId" filterable remote
             reserve-keyword placeholder="Please enter a keyword" :remote-method="shopRemoteMethod"
             :loading="shopSearchLoading">
             <el-option v-for="item in shopOptions" :key="item.id" :label="item.name + ' - ' + item.location"
@@ -25,7 +25,7 @@
         </el-form-item>
 
         <el-form-item label="Product:" prop="items">
-          <el-select :disabled="!this.newOrderForm.shopId" style="width: 100%;" v-loading="productSearchLoading" v-model="newOrderForm.productId" filterable
+          <el-select autocomplete="off" :disabled="!this.newOrderForm.shopId" style="width: 100%;" v-loading="productSearchLoading" v-model="newOrderForm.productId" filterable
             remote reserve-keyword placeholder="Please enter a keyword" :remote-method="productRemoteMethod"
             :loading="productSearchLoading">
             <el-option v-for="item in productOptions" :key="item.id" :label="item.name + ' - ' + item.unitPrice + 'đ'"

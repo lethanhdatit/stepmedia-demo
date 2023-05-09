@@ -13,6 +13,7 @@ namespace stepmedia_demo.Services
                                            SortDirection? orderDirection,
                                            int? page,
                                            int? pageSize,
-                                           Expression<Func<Product, ProductDto>> mapping);
+                                           Expression<Func<Product, ProductDto>> mapping,
+                                           string? search = null);
     }
 }

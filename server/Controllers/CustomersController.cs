@@ -30,7 +30,7 @@ namespace stepmedia_demo.Controllers
                 Id = s.Id,
                 FullName = s.FullName,
                 Email = s.Email,
-                Dob = s.DoB,
+                Dob = s.DoB.HasValue ? s.DoB.Value.ToString("dd/MM/yyyy") : "-",
                 CreatedDate = s.CreatedDate,
             });
         }
