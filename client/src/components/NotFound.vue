@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 750px;">
-    <h1>Not Found Path</h1>
+  <div>
+    <el-empty description="Page Not Found" style="height: 680px;"></el-empty>
   </div>
 </template>
 

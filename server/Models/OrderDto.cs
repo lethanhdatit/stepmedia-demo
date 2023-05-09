@@ -17,6 +17,8 @@ public class OrderDto
 
     public string ShopName { get; set; } = string.Empty;
 
+    public double Total { get { return Items.Sum(s => s.Quantity * s.UnitPrice); } }
+
     public List<OrderDetailDto> Items { get; set; }
 }
 

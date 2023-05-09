@@ -7,7 +7,7 @@ using System.Web.Helpers;
 namespace stepmedia_demo.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;
@@ -20,12 +20,13 @@ namespace stepmedia_demo.Controllers
         }
 
         [HttpGet]
-        public async Task<PaginationResult<ProductDto>> GetList(string? orderBy,
-                                                     SortDirection? orderDirection,
-                                                     int? page,
-                                                     int? pageSize)
+        public async Task<PaginationResult<ProductDto>> GetList(long? shopId,
+                                                                 string? orderBy,
+                                                                 SortDirection? orderDirection,
+                                                                 int? page,
+                                                                 int? pageSize)
         {
-            return await _productService.GetListAsync(orderBy, orderDirection, page, pageSize, s => new ProductDto
+            return await _productService.GetListAsync(shopId, orderBy, orderDirection, page, pageSize, s => new ProductDto
             {
                 Id = s.Id,
                 ShopId = s.ShopId,

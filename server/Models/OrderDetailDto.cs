@@ -23,7 +23,6 @@ public class OrderDetailCreation
     [Required]
     public long ProductId { get; set; }
 
-    [Required]
     public long OrderId { get; set; }
 
     [Required]

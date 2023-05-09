@@ -1,7 +1,10 @@
-﻿using stepmedia_demo.EntityModels;
+﻿using Microsoft.EntityFrameworkCore;
+using stepmedia_demo.EntityModels;
 using stepmedia_demo.Repositories;
 using stepmedia_demo.Services;
 using stepmedia_demo.UnitOfWork;
+using System.Linq.Expressions;
+using System.Web.Helpers;
 
 namespace stepmedia_demo.Services
 {
@@ -24,6 +27,26 @@ namespace stepmedia_demo.Services
             };
 
             return await CreateAsync(newEntity);
+        }
+
+        public async Task<PaginationResult<ProductDto>> GetListAsync(long? shopId,
+                                           string? orderBy,
+                                           SortDirection? orderDirection,
+                                           int? page,
+                                           int? pageSize,
+                                           Expression<Func<Product, ProductDto>> mapping)
+        {
+            if (mapping == null)
+                throw new ArgumentNullException(nameof(mapping));
+
+            var entities = _reponsitory.Find(shopId.HasValue ? s => s.ShopId == shopId.Value : null!, orderBy!, orderDirection, string.Empty, page, pageSize);
+
+            return new PaginationResult<ProductDto>()
+            {
+                TotalCount = entities.TotalCount,
+                FilteredCount = entities.FilteredCount,
+                PagedData = await entities.PagedData.Select(mapping).ToListAsync(),
+            };
         }
     }
 }

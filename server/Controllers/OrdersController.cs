@@ -7,7 +7,7 @@ using System.Web.Helpers;
 namespace stepmedia_demo.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class OrdersController : ControllerBase
     {
         private readonly ILogger<OrdersController> _logger;
