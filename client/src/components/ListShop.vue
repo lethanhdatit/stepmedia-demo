@@ -44,7 +44,7 @@ export default {
     }
   },
   created() {
-    this.fetch(this.pageNumber, this.pageSize);
+    this.fetch(this.pageNumber, this.pageSize, this.sortBy, this.sortOrder);
   },
   methods: {
     async fetch(newPage, newSize, sortColumn, sortOrder) {
@@ -65,7 +65,7 @@ export default {
         this.loading = false;
         this.sortBy = sortColumn;
         this.sortOrder = sortOrder;
-        if (res.data.filteredCount < 3) {
+        if (res.data.totalCount < 3) {
           this.$alert('Not enough data, 03 shops as minimum', 'Warning', {
             confirmButtonText: 'OK',
             type: 'warning',

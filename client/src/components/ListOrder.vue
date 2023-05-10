@@ -75,7 +75,7 @@ export default {
     }
   },
   created() {
-    this.fetch(this.pageNumber, this.pageSize);
+    this.fetch(this.pageNumber, this.pageSize, this.sortBy, this.sortOrder);
   },
   methods: {
     async fetch(newPage, newSize, sortColumn, sortOrder) {

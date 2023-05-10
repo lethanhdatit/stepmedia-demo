@@ -75,7 +75,7 @@ export default {
         this.loading = false;
         this.sortBy = sortColumn;
         this.sortOrder = sortOrder;
-        if (res.data.filteredCount < 30) {
+        if (res.data.totalCount < 30) {
           this.$alert('Not enough data, 30 products as minimum', 'Warning', {
             confirmButtonText: 'OK',
             type: 'warning',

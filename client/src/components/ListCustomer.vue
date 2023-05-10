@@ -49,7 +49,7 @@ export default {
     }
   },
   created() {
-    this.fetch(this.pageNumber, this.pageSize);
+    this.fetch(this.pageNumber, this.pageSize, this.sortBy, this.sortOrder);
   },
   methods: {
     async fetch(newPage, newSize, sortColumn, sortOrder) {
@@ -70,7 +70,7 @@ export default {
         this.loading = false;
         this.sortBy = sortColumn;
         this.sortOrder = sortOrder;
-        if (res.data.filteredCount < 30) {
+        if (res.data.totalCount < 30) {
           this.$alert('Not enough data, 30 customers as minimum', 'Warning', {
             confirmButtonText: 'OK',
             type: 'warning',
